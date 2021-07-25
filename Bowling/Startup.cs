@@ -1,4 +1,5 @@
 using Autofac;
+using Bowling.Filters;
 using Bowling.Services;
 using Bowling.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -38,12 +39,16 @@ namespace Bowling
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bowling", Version = "v1" });
             });
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<GlobalExceptionFilter>();
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             //Register services for DI
-            builder.RegisterType<BowlingService>().As<IBowlingService>().InstancePerLifetimeScope();
             builder.RegisterType<ScoreService>().As<IScoreService>().InstancePerLifetimeScope();
         }
 
@@ -60,6 +65,12 @@ namespace Bowling
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x => x
+                .SetIsOriginAllowed(origin => true)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             app.UseAuthorization();
 

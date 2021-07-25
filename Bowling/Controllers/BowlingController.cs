@@ -14,16 +14,21 @@ namespace Bowling.Controllers
     [ApiController]
     public class BowlingController : ControllerBase
     {
-        private IBowlingService _bowlingService;
-        public BowlingController(IBowlingService bowlingService)
+        private IScoreService _scoreService;
+        public BowlingController(IScoreService scoreService)
         {
-            _bowlingService = bowlingService;
+            _scoreService = scoreService;
         }
 
         [HttpPost("score")]
         public IActionResult GetScore(List<Frame> frames)
         {
-            int score = _bowlingService.GetFinalScore(frames);
+            if(frames.Count <= 0 || frames.Count > 10)
+            {
+                throw new InvalidOperationException("Frame Count should be greater than 0 and less than or equal to 10.");
+            }
+
+            int score = _scoreService.Calculate(frames);
             return Ok(score);
         }
     }

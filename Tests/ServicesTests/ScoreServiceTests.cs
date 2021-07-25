@@ -18,7 +18,7 @@ namespace Tests.ServicesTests
         }
 
         [Test]
-        public void GivenBowlingFrameData1_Returns_FinalScore()
+        public void WhenFramesWithoutStrikeAndSpares_Returns_FinalScore()
         {
             //Arrange
             var frames = new List<Frame>()
@@ -43,7 +43,7 @@ namespace Tests.ServicesTests
         }
 
         [Test]
-        public void GivenBowlingFrameData2_Returns_FinalScore()
+        public void WhenFramesWithMultipleStrikes_Returns_FinalScore()
         {
             //Arrange
             var frames = new List<Frame>()
@@ -68,7 +68,7 @@ namespace Tests.ServicesTests
         }
 
         [Test]
-        public void GivenBowlingFrameData3_Returns_FinalScore()
+        public void WhenLastFrameIsAllStrikes_Returns_FinalScore()
         {
             //Arrange
             var frames = new List<Frame>()
@@ -90,6 +90,81 @@ namespace Tests.ServicesTests
 
             //Assert
             Assert.AreEqual(153, result);
+        }
+
+        [Test]
+        public void WhenFramesWithMultipleSpares_Returns_FinalScore()
+        {
+            //Arrange
+            var frames = new List<Frame>()
+            {
+                new Frame(){FirstRoll = 2, SecondRoll= 1},
+                new Frame(){FirstRoll = 5, SecondRoll= 5},
+                new Frame(){FirstRoll = 4, SecondRoll= 6},
+                new Frame(){FirstRoll = 7, SecondRoll= 3},
+                new Frame(){FirstRoll = 2, SecondRoll= 4},
+                new Frame(){FirstRoll = 7, SecondRoll= 3},
+                new Frame(){FirstRoll = 2, SecondRoll= 1},
+                new Frame(){FirstRoll = 5, SecondRoll= 5},
+                new Frame(){FirstRoll = 4, SecondRoll= 5},
+                new Frame(){FirstRoll = 6, SecondRoll= 3,ThirdRoll= 0}
+            };
+
+            //Act
+            var result = scoreService.Calculate(frames);
+
+            //Assert
+            Assert.AreEqual(99, result);
+        }
+
+        [Test]
+        public void WhenLastFrameHasSpare_Returns_FinalScore()
+        {
+            //Arrange
+            var frames = new List<Frame>()
+            {
+                new Frame(){FirstRoll = 2, SecondRoll= 1},
+                new Frame(){FirstRoll = 5, SecondRoll= 5},
+                new Frame(){FirstRoll = 4, SecondRoll= 6},
+                new Frame(){FirstRoll = 7, SecondRoll= 3},
+                new Frame(){FirstRoll = 2, SecondRoll= 4},
+                new Frame(){FirstRoll = 7, SecondRoll= 3},
+                new Frame(){FirstRoll = 2, SecondRoll= 1},
+                new Frame(){FirstRoll = 5, SecondRoll= 5},
+                new Frame(){FirstRoll = 4, SecondRoll= 5},
+                new Frame(){FirstRoll = 6, SecondRoll= 4,ThirdRoll= 5}
+            };
+
+            //Act
+            var result = scoreService.Calculate(frames);
+
+            //Assert
+            Assert.AreEqual(105, result);
+        }
+
+        [Test]
+        public void WhenFramesWithOnlySparesAndStrikes_Returns_FinalScore()
+        {
+            //Arrange
+            var frames = new List<Frame>()
+            {
+                new Frame(){FirstRoll = 5, SecondRoll= 5},
+                new Frame(){FirstRoll = 10, SecondRoll= 0},
+                new Frame(){FirstRoll = 4, SecondRoll= 6},
+                new Frame(){FirstRoll = 7, SecondRoll= 3},
+                new Frame(){FirstRoll = 10, SecondRoll= 0},
+                new Frame(){FirstRoll = 3, SecondRoll= 7},
+                new Frame(){FirstRoll = 10, SecondRoll= 0},
+                new Frame(){FirstRoll = 10, SecondRoll= 0},
+                new Frame(){FirstRoll = 10, SecondRoll= 0},
+                new Frame(){FirstRoll = 4, SecondRoll= 6,ThirdRoll= 10}
+            };
+
+            //Act
+            var result = scoreService.Calculate(frames);
+
+            //Assert
+            Assert.AreEqual(211, result);
         }
     }
 }

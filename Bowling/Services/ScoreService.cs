@@ -12,10 +12,10 @@ namespace Bowling.Services
         public int Calculate(List<Frame> frames)
         {
             int score = 0;
-            int findex = Constants.LAST_FRAME - 1;
+            int findex = frames.Count - 1;
             while (findex >= 0)
             {
-                if (findex == Constants.LAST_FRAME - 1)
+                if (findex == Constants.LAST_FRAME - 1 || findex == frames.Count - 1)
                 {
                     score += frames[findex].FrameScore;
                 }
